@@ -13,6 +13,8 @@
 #include <windows.h>
 
 
+// Eric edited 2023-12-17
+
 void UpdatePosition(float& currentXPoistion, float& currentYPosition)
 {
 	bool dPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
@@ -61,9 +63,27 @@ int main()
 	float rectYPosition = 50.0f;
 
 	player.setSize(sf::Vector2f(rectWidth, rectHeight));
-	player.setFillColor(sf::Color::Blue);
+	player.setPosition(sf::Vector2f{ rectXPosition, rectYPosition });
+	player.setFillColor(sf::Color::Red);
 
-	
+	// Enemies 
+	const int enemyCount = 10;
+	float enemyPositionX[enemyCount];
+	float enemyPositionY[enemyCount];
+	const float enemySize = 10.0f;
+	const sf::Color enemyColor = sf::Color::Cyan;
+	sf::CircleShape enemies[enemyCount];
+	for (int i = 0; i < enemySize; i++)
+	{
+		enemyPositionX[i] = screenWidth - 100;
+		enemyPositionY[i] = rand() % screenHeight;
+		
+		enemies[i] = sf::CircleShape{ enemySize };
+		enemies[i].setFillColor(enemyColor);
+		enemies[i].setOutlineColor(sf::Color::Red);
+		enemies[i].setOutlineThickness(1.0f);
+	}
+
 	
 	while (window.isOpen())
 	{
@@ -78,9 +98,20 @@ int main()
 		
 		player.setPosition(sf::Vector2f{ rectXPosition,rectYPosition });
 
+		for (int i = 0; i < enemyCount; i++)
+		{
+			enemies[i].setPosition(sf::Vector2f{ enemyPositionX[i],enemyPositionY[i] });
+
+		}
 		
 		window.clear();
 		window.draw(player);
+		for (int i = 0; i < enemyCount; i++)
+		{
+			window.draw(enemies[i]);
+		}
+
+
 		window.display();
 
 	}
