@@ -15,7 +15,7 @@
 
 // Eric edited 2023-12-17
 
-void UpdatePosition(float& currentXPoistion, float& currentYPosition)
+void UpdatePlayerPosition(float& currentXPoistion, float& currentYPosition)
 {
 	bool dPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
 	bool aPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
@@ -40,7 +40,28 @@ void UpdatePosition(float& currentXPoistion, float& currentYPosition)
 	}
 }
 
+void UpdateEnemyPosition(float enemySpeed, int enemyCount, float* enemyPositionX, float*enemyPositionY,
+	float playerPositionX, float playerPositionY)
+{
+	for (int i = 0; i < enemyCount; i++)
+	{
+		float enemyToPlayerX = playerPositionX - enemyPositionX[i];
+		float enemyToPlayerY = playerPositionY - enemyPositionY[i];
+		
+		float length = sqrt(enemyToPlayerX * enemyToPlayerX + enemyToPlayerX * enemyToPlayerY);
+		
+		enemyToPlayerX /= length; // 길이 1 짜리 vector x,y 
+		enemyToPlayerY /= length;
 
+
+		enemyPositionX[i] += enemyToPlayerX * enemySpeed;
+		enemyPositionY[i] += enemyToPlayerY * enemySpeed;
+
+	}
+
+
+
+}
 
 
 
@@ -49,6 +70,10 @@ int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
+	int* intArray = new int[10];
+	intArray[0] = 10;
+
+	
 	int screenWidth = 800;
 	int screenHeight = 450;
 	
@@ -68,11 +93,17 @@ int main()
 
 	// Enemies 
 	const int enemyCount = 10;
-	float enemyPositionX[enemyCount];
-	float enemyPositionY[enemyCount];
+	//float enemyPositionX[enemyCount]; // heap 메모리로 변경 
+	//float enemyPositionY[enemyCount];
+	float* enemyPositionX = new float[enemyCount];
+	float* enemyPositionY = new float[enemyCount];
 	const float enemySize = 10.0f;
+	const float enemySpeed = 0.010f;
+
 	const sf::Color enemyColor = sf::Color::Cyan;
 	sf::CircleShape enemies[enemyCount];
+
+
 	for (int i = 0; i < enemySize; i++)
 	{
 		enemyPositionX[i] = screenWidth - 100;
@@ -94,9 +125,14 @@ int main()
 				window.close();
 		}
 	
-		UpdatePosition(rectXPosition, rectYPosition);
-		
+		// 플레이어 이동 로직 
+		UpdatePlayerPosition(rectXPosition, rectYPosition);
 		player.setPosition(sf::Vector2f{ rectXPosition,rectYPosition });
+
+		// 적 이동 로직 
+		UpdateEnemyPosition(enemySpeed,enemyCount, enemyPositionX, enemyPositionY,
+			rectXPosition, rectYPosition);
+
 
 		for (int i = 0; i < enemyCount; i++)
 		{
@@ -115,7 +151,12 @@ int main()
 		window.display();
 
 	}
-}
+	
+	delete[] enemyPositionX;
+	delete[] enemyPositionY;
+
+	return 0;
+	}
 	
 
 
