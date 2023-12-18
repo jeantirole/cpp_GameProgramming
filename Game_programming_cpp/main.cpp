@@ -11,34 +11,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <windows.h>
+#include <..\Game_programming_cpp\Player.h>
 
-
-// Eric edited 2023-12-17
-
-void UpdatePlayerPosition(sf::Vector2f& PlayerPosition)
-{
-	bool dPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
-	bool aPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-	bool wPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-	bool sPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
-
-	if (dPressed)
-	{
-		PlayerPosition.x += 0.05f;
-	}
-	if (aPressed)
-	{
-		PlayerPosition.x -= 0.05f;
-	}
-	if (wPressed)
-	{
-		PlayerPosition.y -= 0.05f;
-	}
-	if (sPressed)
-	{
-		PlayerPosition.y += 0.05;
-	}
-}
+// Eric edited 2023-12-17 // ~_ ~ // 
 
 void UpdateEnemyPosition(float enemySpeed, int enemyCount, sf::Vector2f* EnemyPositions,
 	sf::Vector2f PlayerPosition)
@@ -61,7 +36,6 @@ void UpdateEnemyPosition(float enemySpeed, int enemyCount, sf::Vector2f* EnemyPo
 
 
 
-
 int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -75,16 +49,21 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "GAME");
 
 	// Player 
-	sf::RectangleShape player;
-	float rectWidth = 20.0f;
-	float rectHeight = 20.0f;
-	//float rectXPosition = 50.0f;
-	//float rectYPosition = 50.0f;
-	sf::Vector2f PlayerPosition = sf::Vector2f{ 50.0f, 50.0f };
+	Player player{ sf::Vector2f{50.0f, 50.0f},
+				20.0f,
+				sf::Color::Red,
+				0.05f };
 	
-	player.setSize(sf::Vector2f(rectWidth, rectHeight));
-	player.setPosition(PlayerPosition);
-	player.setFillColor(sf::Color::Red);
+	//sf::RectangleShape player;
+	//float rectWidth = 20.0f;
+	//float rectHeight = 20.0f;
+	////float rectXPosition = 50.0f;
+	////float rectYPosition = 50.0f;
+	//sf::Vector2f PlayerPosition = sf::Vector2f{ 50.0f, 50.0f }; // location
+	//
+	//player.setSize(sf::Vector2f(rectWidth, rectHeight)); // size
+	//player.setPosition(PlayerPosition); // initial position
+	//player.setFillColor(sf::Color::Red); //color 
 
 
 	// Enemies 
@@ -122,12 +101,12 @@ int main()
 		}
 	
 		// 플레이어 이동 로직 
-		UpdatePlayerPosition(PlayerPosition);
-		player.setPosition(PlayerPosition);
+		player.Update(); // key press and initial location set 
+
+
 
 		// 적 이동 로직 
-		UpdateEnemyPosition(enemySpeed,enemyCount, EnemyPositions,
-			PlayerPosition);
+		UpdateEnemyPosition(enemySpeed,enemyCount, EnemyPositions,player.GetPosition() );
 
 
 		for (int i = 0; i < enemyCount; i++)
@@ -137,7 +116,8 @@ int main()
 		}
 		
 		window.clear();
-		window.draw(player);
+		player.Draw(window);
+		//window.draw(player); // 플레이어를 그리는 기능
 		for (int i = 0; i < enemyCount; i++)
 		{
 			window.draw(enemies[i]);
