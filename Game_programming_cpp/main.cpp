@@ -12,28 +12,9 @@
 #include <iostream>
 #include <windows.h>
 #include <..\Game_programming_cpp\Player.h>
+#include <..\Game_programming_cpp\Enemy.h>
 
 // Eric edited 2023-12-17 // ~_ ~ // 
-
-void UpdateEnemyPosition(float enemySpeed, int enemyCount, sf::Vector2f* EnemyPositions,
-	sf::Vector2f PlayerPosition)
-{
-	for (int i = 0; i < enemyCount; i++)
-	{
-		float enemyToPlayerX = PlayerPosition.x - EnemyPositions[i].x;
-		float enemyToPlayerY = PlayerPosition.y - EnemyPositions[i].y;
-		
-		float length = sqrt(enemyToPlayerX * enemyToPlayerX + enemyToPlayerX * enemyToPlayerY);
-		
-		enemyToPlayerX /= length; // 길이 1 짜리 vector x,y 
-		enemyToPlayerY /= length;
-
-		EnemyPositions[i].x += enemyToPlayerX * enemySpeed;
-		EnemyPositions[i].y += enemyToPlayerY * enemySpeed;
-
-	}
-}
-
 
 
 int main()
@@ -54,41 +35,19 @@ int main()
 				sf::Color::Red,
 				0.05f };
 	
-	//sf::RectangleShape player;
-	//float rectWidth = 20.0f;
-	//float rectHeight = 20.0f;
-	////float rectXPosition = 50.0f;
-	////float rectYPosition = 50.0f;
-	//sf::Vector2f PlayerPosition = sf::Vector2f{ 50.0f, 50.0f }; // location
-	//
-	//player.setSize(sf::Vector2f(rectWidth, rectHeight)); // size
-	//player.setPosition(PlayerPosition); // initial position
-	//player.setFillColor(sf::Color::Red); //color 
-
 
 	// Enemies 
 	const int enemyCount = 10;
-	//float enemyPositionX[enemyCount]; // heap 메모리로 변경 
-	//float enemyPositionY[enemyCount];
-	//float* enemyPositionX = new float[enemyCount]; // player 는 하나지만, enemy 는 다수이므로, 동적할당 배열을 사용
-	//float* enemyPositionY = new float[enemyCount]; // player 에서 했던 것처럼. sf::Vector2f 객체를 동적할당 배열로 활용
-	const float enemySize = 10.0f;
-	const float enemySpeed = 0.010f;
-	sf::Vector2f* EnemyPositions = new sf::Vector2f[enemyCount];
-	const sf::Color enemyColor = sf::Color::Cyan;
-	sf::CircleShape enemies[enemyCount];
-
-
-	for (int i = 0; i < enemySize; i++)
+	Enemy* enemies = new Enemy[enemyCount]; //클래스의 동적할당 
+	for (int i = 0; i < enemyCount; i++)
 	{
-		EnemyPositions[i].x = screenWidth - 100;
-		EnemyPositions[i].y = rand() % screenHeight;
-		
-		enemies[i] = sf::CircleShape{ enemySize };
-		enemies[i].setFillColor(enemyColor);
-		enemies[i].setOutlineColor(sf::Color::Red);
-		enemies[i].setOutlineThickness(1.0f);
+		float enemyRandomX = screenWidth - 100;
+		float enemyRandomY = rand() % screenHeight;
+		sf::Vector2f enemyPos{ enemyRandomX,enemyRandomY };
+
+		enemies[i] = Enemy{ enemyPos,10.0f,sf::Color::Cyan,0.05f,&player }; // player 의 주소값 넣는부분 ! 가장중요 ! @!@!@!@!@!@
 	}
+
 
 	
 	while (window.isOpen())
@@ -104,14 +63,10 @@ int main()
 		player.Update(); // key press and initial location set 
 
 
-
 		// 적 이동 로직 
-		UpdateEnemyPosition(enemySpeed,enemyCount, EnemyPositions,player.GetPosition() );
-
-
 		for (int i = 0; i < enemyCount; i++)
 		{
-			enemies[i].setPosition(sf::Vector2f{ EnemyPositions[i].x,EnemyPositions[i].y });
+			enemies[i].Update();
 
 		}
 		
@@ -120,7 +75,7 @@ int main()
 		//window.draw(player); // 플레이어를 그리는 기능
 		for (int i = 0; i < enemyCount; i++)
 		{
-			window.draw(enemies[i]);
+			enemies[i].Draw(window);
 		}
 
 
@@ -128,6 +83,7 @@ int main()
 
 	}
 	
+	delete [] enemies;
 	//delete[] enemyPositionX;
 	//delete[] enemyPositionY;
 

@@ -10,7 +10,7 @@ public:
 	
 	void Draw(sf::RenderWindow& window); // 플레이어 그리기 
 
-	sf::Vector2f GetPosition();
+	sf::Vector2f GetPosition() const;
 
 private:
 	void ProcessInput(); // 키보드입력처리 
