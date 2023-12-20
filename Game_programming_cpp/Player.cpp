@@ -36,18 +36,18 @@ void Player::ProcessInput() // 입력처리
 
 	if (dPressed)
 	{
-		position.x += 0.05f;
+		position.x += speed;
 	}
 	if (aPressed)
 	{
-		position.x -= 0.05f;
+		position.x -= speed;
 	}
 	if (wPressed)
 	{
-		position.y -= 0.05f;
+		position.y -= speed;
 	}
 	if (sPressed)
 	{
-		position.y += 0.05;
+		position.y += speed;
 	}
 }

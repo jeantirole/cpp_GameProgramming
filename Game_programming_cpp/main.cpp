@@ -26,8 +26,8 @@ int main()
 	int* intArray = new int[10];
 	intArray[0] = 10;
 
-	int screenWidth = 800;
-	int screenHeight = 450;
+	int screenWidth = 1200;
+	int screenHeight = 600;
 
 	sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "GAME");
 
@@ -35,7 +35,7 @@ int main()
 	Player player{ sf::Vector2f{50.0f, 50.0f},
 				20.0f,
 				sf::Color::Red,
-				0.05f };
+				0.1f };
 	
 
 	// Enemies 
