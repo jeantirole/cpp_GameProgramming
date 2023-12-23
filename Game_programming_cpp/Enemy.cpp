@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "Player.h"
+#include <cmath>
 
 Enemy::Enemy(const sf::Vector2f pos, float size, sf::Color color, float speed, const Player* player)
 	: position{pos}, size{size}, color{color}, speed{speed}, playerRef{player}
@@ -15,7 +16,7 @@ Enemy::Enemy()
 }
 
 
-void Enemy::Update()
+void Enemy::Update(float dt)
 {
 	UpdatePosition();
 	shape.setPosition(position);
@@ -40,7 +41,7 @@ void Enemy::UpdatePosition()
 		float enemyToPlayerX = playerRef->GetPosition().x - position.x;
 		float enemyToPlayerY = playerRef->GetPosition().y - position.y;
 
-		float length = sqrt(enemyToPlayerX * enemyToPlayerX + enemyToPlayerX * enemyToPlayerY);
+		float length = sqrt(enemyToPlayerX * enemyToPlayerX + enemyToPlayerY * enemyToPlayerY);
 
 		enemyToPlayerX /= length; // 길이 1 짜리 vector x,y 
 		enemyToPlayerY /= length;

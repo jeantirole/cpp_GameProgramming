@@ -9,10 +9,10 @@ Player::Player(sf::Vector2f pos, float size, sf::Color color, float speed)
 	shape.setFillColor(color);
 }
 
-void Player::Update()
+void Player::Update(float dt)
 {
 	// Update() Body, 累己
-	ProcessInput();
+	ProcessInput(dt);
 	shape.setPosition(position);
 }
 
@@ -27,7 +27,7 @@ sf::Vector2f Player::GetPosition() const
 	return position;
 }
 
-void Player::ProcessInput() // 涝仿贸府 
+void Player::ProcessInput(float dt) // 涝仿贸府 
 {
 	bool dPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
 	bool aPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
@@ -36,18 +36,18 @@ void Player::ProcessInput() // 涝仿贸府
 
 	if (dPressed)
 	{
-		position.x += speed;
+		position.x += speed*  dt;
 	}
 	if (aPressed)
 	{
-		position.x -= speed;
+		position.x -= speed *  dt;
 	}
 	if (wPressed)
 	{
-		position.y -= speed;
+		position.y -= speed *  dt;
 	}
 	if (sPressed)
 	{
-		position.y += speed;
+		position.y += speed * dt;
 	}
 }

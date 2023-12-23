@@ -10,7 +10,7 @@ public:
 	Enemy(const sf::Vector2f pos, float size, sf::Color color, float speed, const Player* playerRef);
 	Enemy();
 
-	void Update(); // 플레이어의 동작 
+	void Update(float dt); // 플레이어의 동작 
 
 	void Draw(sf::RenderWindow& window); // 플레이어 그리기 
 	

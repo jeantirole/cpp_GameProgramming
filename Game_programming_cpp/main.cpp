@@ -14,6 +14,7 @@
 #include <windows.h>
 #include <..\Game_programming_cpp\Player.h>
 #include <..\Game_programming_cpp\Enemy.h>
+#include <..\Game_programming_cpp\Bullet.h>
 
 // Eric edited 2023-12-17 // ~_ ~ // 
 
@@ -30,12 +31,15 @@ int main()
 	int screenHeight = 600;
 
 	sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "GAME");
+	// FPS 제한 ! 
+	//window.setFramerateLimit(60);
+	
 
 	// Player 
 	Player player{ sf::Vector2f{50.0f, 50.0f},
 				20.0f,
 				sf::Color::Red,
-				0.1f };
+				500 };
 	
 
 	// Enemies 
@@ -49,13 +53,21 @@ int main()
 		sf::Vector2f enemyPos{ enemyRandomX,enemyRandomY };
 
 
-		Enemy* e = new Enemy{ enemyPos,10.0f,sf::Color::Cyan,0.05f,&player }; // enemy 를 만들어서 그 주소를 동적할당 new로 넘겨줌
+		Enemy* e = new Enemy{ enemyPos,10.0f,sf::Color::Cyan,0.05,&player }; // enemy 를 만들어서 그 주소를 동적할당 new로 넘겨줌
 		enemies.push_back(e);
 		
 	}
 
+	// Bullet
+	std::vector<Bullet*> bullets;
+	//Bullet b{ sf::Vector2f{0,0},sf::Vector2f{1,0},5,sf::Color::Green,500 };
+	float bulletFirePeriod = 1.0f;
+	float bulletFireTimer = 0.0f;
 
-	
+
+	// Bullet 의 주기적인 생성을 위한 Time clock
+	sf::Clock deltaTimeClock;
+
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -64,16 +76,41 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
+		
+		float dt = deltaTimeClock.restart().asSeconds();
+		//std::cout << dt << std::endl;
+		bulletFireTimer += dt;
+		if (bulletFireTimer > bulletFirePeriod)
+		{
+			// Bullet 새로 생성
+			//std::cout << " 새로운 총알 생성됨 " << std::endl;
+
+			Bullet* b = new Bullet{ player.GetPosition(),sf::Vector2f{1,0},
+			3,sf::Color::Yellow, 500 };
+
+			bullets.push_back(b);
+
+			bulletFireTimer = 0;
+		}
+
+	
 	
 		// 플레이어 이동 로직 
-		player.Update(); // key press and initial location set 
+		player.Update(dt); // key press and initial location set 
 
 
 		// 적 이동 로직 
 		for (int i = 0; i < enemies.size(); i++)
 		{
 			// (*enemies[i]).Update(); // 주소를 찾아가서 class 객체를 가져와야 하므로,, 역참조를 활용한다. 객체=>주소=>객체 
-			enemies[i]->Update(); // 아 이게 훨씬 편함 위에꺼랑 같은건데. 
+			enemies[i]->Update(dt); // 아 이게 훨씬 편함 위에꺼랑 같은건데. 
+		}
+
+		// Bullet 이동 로직 
+		for (int i = 0; i < bullets.size(); i++)
+		{
+			// (*enemies[i]).Update(); // 주소를 찾아가서 class 객체를 가져와야 하므로,, 역참조를 활용한다. 객체=>주소=>객체 
+			bullets[i]->Update(dt); // 아 이게 훨씬 편함 위에꺼랑 같은건데. 
 		}
 		
 		window.clear();
@@ -82,6 +119,14 @@ int main()
 		for (int i = 0; i < enemies.size(); i++)
 		{
 			(*enemies[i]).Draw(window);
+
+		}
+
+		//bullet draw ! 
+		for (int i = 0; i < bullets.size(); i++)
+		{
+			// (*enemies[i]).Update(); // 주소를 찾아가서 class 객체를 가져와야 하므로,, 역참조를 활용한다. 객체=>주소=>객체 
+			bullets[i]->Draw(window); // 아 이게 훨씬 편함 위에꺼랑 같은건데. 
 		}
 
 

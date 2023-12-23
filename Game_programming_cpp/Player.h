@@ -6,14 +6,14 @@ class Player
 public:
 	Player(sf::Vector2f pos, float size, sf::Color color, float speed);
 	
-	void Update(); // 플레이어의 동작 
+	void Update(float dt); // 플레이어의 동작 
 	
 	void Draw(sf::RenderWindow& window); // 플레이어 그리기 
 
 	sf::Vector2f GetPosition() const;
 
 private:
-	void ProcessInput(); // 키보드입력처리 
+	void ProcessInput( float dt); // 키보드입력처리 
 
 
 private:
