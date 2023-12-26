@@ -1,28 +1,34 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
+
+class Game;
 
 class Bullet
 {
 public:
-	Bullet(const sf::Vector2f& position, const sf::Vector2f& direction,
-		float size, const sf::Color& color, float speed);
+    Bullet(Game* game, float size, const sf::Color& color, float speed);
 
+    Bullet();
 
-	void Update(float dt); // 외부에서 접근할 때 Update로 접근하고, Update 는 UpdatePosition을 부르게 한번 감쌌음
-	
-	void Draw(sf::RenderWindow& window);
-	sf::Vector2f GetPosition() const { return position; }; // in-line으로 헤더에서 간단하게 구현하였음 
+    void Update(float dt);
 
-private:
-	void UpdatePosition(float dt);
+    void Draw(sf::RenderWindow& window);
+
+    sf::Vector2f getPosition() const { return position; }
 
 private:
-	sf::Vector2f position;
-	sf::Vector2f direction;
-	float speed;
+    void UpdatePosition(float dt);
+    sf::Vector2f GetPlayerToClosestEnemyVector();
 
-	sf::CircleShape shape;
-	float size;
-	sf::Color color;
+private:
+    Game* game;
 
+    sf::Vector2f position;
+    sf::Vector2f direction;
+    float speed;
+
+    sf::CircleShape shape;
+    float size;
+    sf::Color color;
 };

@@ -1,58 +1,32 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
-#include <../Game_programming_cpp/Player.h>
 
-
+class Player;
+class Game;
 
 class Enemy
 {
 public:
-	Enemy(const sf::Vector2f pos, float size, sf::Color color, float speed, const Player* playerRef);
-	Enemy();
+    Enemy(Game* game, const sf::Vector2f pos, float size, sf::Color color, float speed);
+    Enemy();
 
-	void Update(float dt); // 플레이어의 동작 
+    void Update(float dt);
 
-	void Draw(sf::RenderWindow& window); // 플레이어 그리기 
-	
-	void UpdatePosition();
+    void Draw(sf::RenderWindow& window);
 
-	sf::Vector2f GetPosition() const;
+    sf::Vector2f getPosition() const { return position; }
 
 private:
-	sf::Vector2f position; // 위치 
-	float speed;
-	const Player* playerRef; //player ! 
-	float size;
-	sf::Color color;
-	sf::CircleShape shape;
-	 
+    void UpdatePosition(float dt);
+
+private:
+    Game* game;
+
+    sf::Vector2f position;
+    float speed;
+
+    sf::CircleShape shape;
+    float size;
+    sf::Color color;
 };
-//
-//class Enemy
-//{
-//public:
-//	// constructor 
-//	Enemy(const sf::Vector2f pos, float size, sf::Color color, float speed,
-//		const Player* player);
-//	Enemy(); // 인자를 안받는 기본 생성자 => 왜 필요하지? 
-//
-//	void Update(); 
-//
-//	void Draw(sf::RenderWindow& window); // drawing 
-//
-//	sf::Vector2f GetPosition();
-//
-//private:
-//	void UpdatePosition();
-//
-//
-//private:
-//	sf::Vector2f position; // 위치 
-//	float speed;
-//	const Player* playerRef;
-//	
-//	float size;
-//	sf::Color color;
-//	sf::CircleShape shape;
-//	
-//};

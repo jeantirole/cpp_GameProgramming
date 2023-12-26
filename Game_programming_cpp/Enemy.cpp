@@ -1,9 +1,9 @@
+#include "Game.h"
 #include "Enemy.h"
 #include "Player.h"
-#include <cmath>
 
-Enemy::Enemy(const sf::Vector2f pos, float size, sf::Color color, float speed, const Player* player)
-	: position{pos}, size{size}, color{color}, speed{speed}, playerRef{player}
+Enemy::Enemy(Game* game, const sf::Vector2f pos, float size, sf::Color color, float speed) // dependency injection
+	: position{ pos }, size{ size }, color{ color }, speed{ speed }, game{ game }
 {
 	shape = sf::CircleShape{ size };
 	shape.setFillColor(color);
@@ -12,41 +12,30 @@ Enemy::Enemy(const sf::Vector2f pos, float size, sf::Color color, float speed, c
 }
 
 Enemy::Enemy()
-{
-}
+	: Enemy{ nullptr, sf::Vector2f{0,0}, 1.0f, sf::Color{255,255,0,255}, 1.0f }
+{}
 
 
 void Enemy::Update(float dt)
 {
-	UpdatePosition();
+	UpdatePosition(dt);
 	shape.setPosition(position);
 }
 
 void Enemy::Draw(sf::RenderWindow& window)
 {
 	window.draw(shape);
-
 }
 
-sf::Vector2f Enemy::GetPosition() const
+void Enemy::UpdatePosition(float dt)
 {
-	return sf::Vector2f();
-}
+	sf::Vector2f playerPosition = game->GetPlayer()->getPosition();
 
-void Enemy::UpdatePosition()
-{
-	
-	
-		
-		float enemyToPlayerX = playerRef->GetPosition().x - position.x;
-		float enemyToPlayerY = playerRef->GetPosition().y - position.y;
+	sf::Vector2f enemyToPlayer = playerPosition - position;
 
-		float length = sqrt(enemyToPlayerX * enemyToPlayerX + enemyToPlayerY * enemyToPlayerY);
+	float length = sqrt(enemyToPlayer.x * enemyToPlayer.x + enemyToPlayer.y * enemyToPlayer.y);
 
-		enemyToPlayerX /= length; // 길이 1 짜리 vector x,y 
-		enemyToPlayerY /= length;
+	enemyToPlayer /= length;
 
-		position.x += enemyToPlayerX * speed;
-		position.y += enemyToPlayerY * speed;
-
+	position += enemyToPlayer * speed * dt;
 }

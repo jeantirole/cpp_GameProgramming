@@ -1,29 +1,25 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
 
 class Player
 {
 public:
-	Player(sf::Vector2f pos, float size, sf::Color color, float speed);
-	
-	void Update(float dt); // 플레이어의 동작 
-	
-	void Draw(sf::RenderWindow& window); // 플레이어 그리기 
+    Player(const sf::Vector2f pos, float size, sf::Color color, float speed);
 
-	sf::Vector2f GetPosition() const;
+    void Update(float dt);
+
+    void Draw(sf::RenderWindow& window);
+
+    sf::Vector2f getPosition() const { return position; }
+private:
+    void ProcessInput(float dt);
 
 private:
-	void ProcessInput( float dt); // 키보드입력처리 
+    sf::Vector2f position;
+    float speed;
 
-
-private:
-	sf::Vector2f position; //위치 
-	float speed;
-
-	sf::RectangleShape shape; //모양
-	float size; //크기 
-	sf::Color color; //색 
-	
-	
+    sf::RectangleShape shape;
+    float size;
+    sf::Color color;
 };
-
